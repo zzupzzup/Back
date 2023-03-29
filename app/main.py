@@ -82,16 +82,6 @@ def create_item(item: ItemIn):
     return item
 
 
-# 6. Form
-templates = Jinja2Templates(directory='./')
-
-@app.get("/api/login/") # Request 객체로 Request를 받는다.
-def get_login_form(request: Request):	# login_form.html 파일이 필요하다
-    return templates.TemplateResponse('login_form.html', context={'request': request})
-
-@app.post("/api/login/")
-def login(username: str = Form(...), password: str = Form(...)):
-    return {"username": username}
 
 
 if __name__ == '__main__':

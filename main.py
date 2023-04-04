@@ -8,7 +8,6 @@ from pydantic import BaseModel
 app = FastAPI()
 
 #실행하는 코드
-# cd app
 # uvicorn main:app --reload 
 
 #cors에러 해결
@@ -25,6 +24,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 1. Path Parameter
+@app.get("/")
+def get_start():
+    return {"Hello, world"}
 
 # 1. Path Parameter
 @app.get("/api/users/{user_id}")

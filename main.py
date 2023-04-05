@@ -18,7 +18,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 app = FastAPI()
 
 #실행하는 코드
-# cd app
 # uvicorn main:app --reload 
 
 #cors에러 해결
@@ -36,7 +35,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/items/")
+@app.get("/api/items")
 async def read_items(token: Annotated[str, Depends(oauth2_scheme)]):
     return {"token": token}
 

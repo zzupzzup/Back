@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 import logging
 
 
-class SQLAlchemy:
+class SQLAlchemy: # fastAPI 에 SQLAlchemy 를 이용해서 mysql 을 연결 -> 그냥 복붙해서 사용
     def __init__(self, app: FastAPI = None, **kwargs):
         self._engine = None
         self._session = None
@@ -23,13 +23,13 @@ class SQLAlchemy:
         pool_recycle = kwargs.setdefault("DB_POOL_RECYCLE", 900)
         echo = kwargs.setdefault("DB_ECHO", True)
 
-        self._engine = create_engine(
+        self._engine = create_engine( # SQLAlchemy 내부 함수
             database_url,
             echo=echo,
             pool_recycle=pool_recycle,
             pool_pre_ping=True,
         )
-        self._session = sessionmaker(autocommit=False, autoflush=False, bind=self._engine)
+        self._session = sessionmaker(autocommit=False, autoflush=False, bind=self._engine) # SQLAlchemy 내부 함수
 
         @app.on_event("startup")
         def startup():

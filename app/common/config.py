@@ -1,5 +1,3 @@
-# 환경별 변수를 넣는 공간
-
 from dataclasses import dataclass, asdict
 from os import path, environ
 
@@ -14,12 +12,13 @@ class Config:
     BASE_DIR = base_dir
 
     DB_POOL_RECYCLE: int = 900
-    DB_ECHO: bool = True
+    DB_ECHO: bool = True # ECHO -> 트루 -> 터미널 실행하면 에코를 함
 
 
 @dataclass
 class LocalConfig(Config):
     PROJ_RELOAD: bool = True
+    DB_URL: str = "mysql+pymysql://travis:ghkd@localhost/notification_api?charset=utf8mb4" # mysql+pymysql://{user}:{password}@{endpoint}:{port}/{db}
 
 
 @dataclass
@@ -27,10 +26,10 @@ class ProdConfig(Config):
     PROJ_RELOAD: bool = False
 
 
-def conf():
+def conf(): 
     """
     환경 불러오기
     :return:
     """
     config = dict(prod=ProdConfig(), local=LocalConfig())
-    return config.get(environ.get("API_ENV", "local"))
+    return config.get(environ.get("API_ENV", "local"))  

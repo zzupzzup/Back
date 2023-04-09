@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-
 from sqlalchemy import (
     Column,
     Integer,
@@ -8,23 +7,23 @@ from sqlalchemy import (
     func,
     Enum, Boolean,
 )
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
-from app.database.conn import Base
+from app.database.conn import Base, db
 
 
 class BaseMixin:
     id = Column(Integer, primary_key=True, index=True)
-    created_at = Column(DateTime, nullable=False, default=func.utc_timestamp()) # create 된 시간 기록 # 근데 이 시간이 한국 시간이랑 안 맞음 -> (별로 중요한 건 아니지만) 수정해야 함
-    updated_at = Column(DateTime, nullable=False, default=func.utc_timestamp(), onupdate=func.utc_timestamp()) # update 된 시간 기록 
-
+    created_at = Column(DateTime, nullable=False, default=func.utc_timestamp())
+    updated_at = Column(DateTime, nullable=False, default=func.utc_timestamp(), onupdate=func.utc_timestamp())
     def all_columns(self):
-        return [c for c in self.__table__.columns if c.primary_key is False and c.name != "created_at"] # 각 컬럼이 몇 개든 상관없음
-
+        return [c for c in self.__table__.columns if c.primary_key is False and c.name != "created_at"]
     def __hash__(self):
         return hash(self.id)
 
-    def create(self, session: Session, auto_commit=False, **kwargs):
+    @classmethod
+    def create(cls, session: Session, auto_commit=False, **kwargs):
         """
         테이블 데이터 적재 전용 함수
         :param session:
@@ -32,18 +31,36 @@ class BaseMixin:
         :param kwargs: 적재 할 데이터
         :return:
         """
-        for col in self.all_columns():
+        obj = cls()
+        for col in obj.all_columns():
             col_name = col.name
             if col_name in kwargs:
-                setattr(self, col_name, kwargs.get(col_name))
-        session.add(self)
+                setattr(obj, col_name, kwargs.get(col_name))
+        session.add(obj)
         session.flush()
         if auto_commit:
             session.commit()
-        return self
+        return obj
+
+    @classmethod
+    def get(cls, **kwargs):
+        """
+        Simply get a Row
+        :param kwargs:
+        :return:
+        """
+        session = next(db.session())
+        query = session.query(cls)
+        for key, val in kwargs.items():
+            col = getattr(cls, key)
+            query = query.filter(col == val)
+
+        if query.count() > 1:
+            raise Exception("Only one row is supposed to be returned, but got more than one.")
+        return query.first()
 
 
-class Users(Base, BaseMixin): # 이 부분과 우리 DB 컬럼을 변경해야 함   
+class Users(Base, BaseMixin):
     __tablename__ = "users"
     status = Column(Enum("active", "deleted", "blocked"), default="active")
     email = Column(String(length=255), nullable=True)

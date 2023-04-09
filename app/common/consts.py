@@ -1,2 +1,4 @@
 # 상수를 넣는 공간
 
+JWT_SECRET = "ABCD1234!"
+JWT_ALGORITHM = "HS256"

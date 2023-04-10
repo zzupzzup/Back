@@ -56,7 +56,7 @@ class BaseMixin:
             query = query.filter(col == val)
 
         if query.count() > 1:
-            raise Exception("Only one row is supposed to be returned, but got more than one.")
+            raise Exception("Only one row is supposed to be returned, but got more than one.") 
         return query.first()
 
 

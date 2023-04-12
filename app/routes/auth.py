@@ -26,7 +26,7 @@ async def register(sns_type: SnsType, reg_info: UserRegister, session: Session =
     # SnsType -> email 과 google 만 남기고 지우기 
     if sns_type == SnsType.email: # 진실이 -> 회원가입 창 만들라고 전달
         is_exist = await is_email_exist(reg_info.email)
-        if not reg_info.email or reg_info.pw: # email 과 pw 가 공란인 경우 
+        if not reg_info.email or not reg_info.pw: # email 과 pw 가 공란인 경우 
             return JSONResponse(status_code=400, content=dict(msg="Email and PW must be provided'"))
         if is_exist: # 이미 기존에 존재하는 email 인 경우
             return JSONResponse(status_code=400, content=dict(msg="EMAIL_EXISTS"))

@@ -18,8 +18,8 @@ class Config:
 @dataclass
 class LocalConfig(Config):
     PROJ_RELOAD: bool = True
-    DB_URL: str = "mysql+pymysql://travis:ghkd@localhost/notification_api?charset=utf8mb4" # mysql+pymysql://{user}:{password}@{endpoint}:{port}/{db}
-
+    #DB_URL: str = "mysql+pymysql://travis:ghkd@localhost/notification_api?charset=utf8mb4" # mysql+pymysql://{user}:{password}@{endpoint}:{port}/{db}
+    DB_URL: str = "mysql+pymysql://travis:ghkd@svc.sel3.cloudtype.app:31955/notification_api?charset=utf8mb4" # cloudtype 에 배포한 서버와 연결
 
 @dataclass
 class ProdConfig(Config):

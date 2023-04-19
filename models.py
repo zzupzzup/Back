@@ -20,7 +20,6 @@ class SnsType(str, Enum): # Enum 외에 다른 값이 들어오면 422 ERROR
 class Token(BaseModel): # 이런 방식으로 토큰을 전달
     Authorization: str = None
 
-
 class UserToken(BaseModel):
     id: int
     pw: str = None

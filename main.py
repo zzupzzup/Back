@@ -27,7 +27,7 @@ def create_app():
     return app
 
 
-app = create_app()
+app = create_app() 
 
 # cors에러 해결 
 origins = ["*"]

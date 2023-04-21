@@ -7,6 +7,8 @@ from app.common.config import conf
 from app.routes import index, auth
 from fastapi.middleware.cors import CORSMiddleware
 
+import torch
+import chatRRS
 
 def create_app():
     """
@@ -24,6 +26,13 @@ def create_app():
     # 라우터 정의
     app.include_router(index.router)
     app.include_router(auth.router, tags=["Authentication"], prefix="/auth")
+    
+    #chatRRS -> 라우터 형태로 바꿔주기    
+    @app.post('/chatRec')
+    async def search_test(query: str):
+        chatRec = chatRRS.search_test(query)
+        return {'chatRec' : chatRec } 
+    
     return app
 
 

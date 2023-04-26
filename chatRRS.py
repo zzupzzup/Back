@@ -2,6 +2,7 @@ import json
 from sentence_transformers import SentenceTransformer, CrossEncoder, util
 import gzip
 import os
+from os import path
 import torch
 import pandas as pd
 
@@ -11,6 +12,10 @@ import string
 from tqdm.autonotebook import tqdm
 import numpy as np
 
+import boto3
+from connectS3 import upload_to_aws, download_from_aws
+
+
 mps_device = torch.device("mps") # 나는 m1 맥북이라서 이렇게 했음.
     
 bi_encoder = SentenceTransformer('jhgan/ko-sbert-multitask', device=mps_device)
@@ -19,14 +24,25 @@ top_k = 32                          #Number of passages we want to retrieve with
 
 cross_encoder = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2', device=mps_device)
 
+if path.exists('mangoplate_review_raw.csv') == False:
+    download_from_aws('mangoplate_review_raw.csv', 'zzup-s3-bucket', 'mangoplate_review_raw.csv')
 mango_plate = pd.read_csv('mangoplate_review_raw.csv')
 mango_clean = mango_plate.dropna(subset=['reviewtext'])
 mango_clean = mango_clean.reset_index(drop=True)
 passages = mango_clean['reviewtext']
 
+# embedding_vec.npy 저장하기
 #corpus_embeddings= bi_encoder.encode(passages, convert_to_tensor=True, show_progress_bar=True) # 매번 실행될 떄마다 1시간 걸림.
-#torch.save(corpus_embeddings, 'mangoplate_review_embedding.pt') # 최초 한 번만 실행시켜서 저장시켜놓고
-corpus_embeddings = torch.load('mangoplate_review_embedding.pt', map_location=mps_device) # 불러와서 쓰자. -> 나중에 class 로 만들 때 갈라주기
+#corpus_embeddings_np = corpus_embeddings.cpu().numpy()
+#np.save('embedding_vec.npy', corpus_embeddings_np)
+#upload_to_aws('embedding_vec.npy', 'zzup-s3-bucket', 'embedding_vec.npy') # aws 에 업로드
+
+if path.exists('embedding_vec.npy') == False:
+    download_from_aws('embedding_vec.npy', 'zzup-s3-bucket', 'embedding_vec.npy') # aws 에서 다운로드
+
+# embedding_vec.npy 불러오기
+np_load = np.load('embedding_vec.npy')
+corpus_embeddings = torch.from_numpy(np_load).to('mps')
 
 def bm25_tokenizer(text):
     tokenized_doc = []

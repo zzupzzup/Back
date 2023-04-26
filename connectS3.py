@@ -5,7 +5,6 @@ from cloudpathlib import CloudPath
 
 ACCESS_KEY = 'AKIATPW7Y2BPGCB4NHHD'
 SECRET_KEY = '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'
-ENDPOINT_URL = 'https://zzup-s3-bucket.s3.ap-northeast-2.amazonaws.com/embedding_vec.npy'
 
 
 def upload_to_aws(local_file, bucket, s3_file):

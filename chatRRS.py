@@ -16,7 +16,9 @@ import boto3
 from connectS3 import upload_to_aws, download_from_aws
 
 
-mps_device = torch.device("mps") # 나는 m1 맥북이라서 이렇게 했음.
+#mps_device = torch.device("mps") # 나는 m1 맥북이라서 이렇게 했음.
+mps_device = torch.device("cpu") # 근데 우분투에는 mps 가 없음.
+
     
 bi_encoder = SentenceTransformer('jhgan/ko-sbert-multitask', device=mps_device)
 bi_encoder.max_seq_length = 512     #Truncate long passages to 256 tokens
@@ -42,7 +44,7 @@ if path.exists('embedding_vec.npy') == False:
 
 # embedding_vec.npy 불러오기
 np_load = np.load('embedding_vec.npy')
-corpus_embeddings = torch.from_numpy(np_load).to('mps')
+corpus_embeddings = torch.from_numpy(np_load).to('cpu')
 
 def bm25_tokenizer(text):
     tokenized_doc = []

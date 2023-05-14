@@ -45,9 +45,10 @@ cpu_device = torch.device("cpu")
 # 파일명 review_0510_1655.csv
 engine = create_engine(LocalConfig.DB_URL)
 
-query_review = 'SELECT * FROM reviews'
-DF = pd.read_sql_query(sql=text(query_review), con=engine.connect())
+if path.exists('review_0510_1655.csv') == False:
+          download_from_aws('review_0510_1655.csv', 'zzup-s3-bucket', 'review_0510_1655.csv')
 
+DF =  pd.read_csv('review_0510_1655.csv')
 #DF =  pd.read_csv('/Users/hwangjaesung/Documents/capstone/Back/review_0510_1655.csv')
 
 def fetch_store_info(idxs,scores):

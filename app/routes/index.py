@@ -16,10 +16,6 @@ async def index(session : Session = Depends(db.session), ):
     ELB 상태 체크용 API
     :return:
     """
-    # DB 에 값이 잘 들어가는지 확인하기 위한 테스트 코드 
-    # user = Users(status = 'active', email = 'esteen196@naver.com', pw = '123123123', name= '황재성')
-    # session.add(user)
-    # session.commit
     
     #Users.create(session, auto_commit=True, name = "HwangJaesung")
     current_time = datetime.utcnow()

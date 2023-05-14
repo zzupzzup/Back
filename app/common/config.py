@@ -33,4 +33,4 @@ def conf():
     :return:
     """
     config = dict(prod=ProdConfig(), local=LocalConfig())
-    return config.get(environ.get("API_ENV", "local"))  
+    return config.get(environ.get("API_ENV", "local"))

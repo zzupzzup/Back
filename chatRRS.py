@@ -79,7 +79,7 @@ def search(query: str):
     
     if path.exists('encoded_data_0510_1925.npy') == False:
           download_from_aws('encoded_data_0510_1925.npy', 'zzup-s3-bucket', 'encoded_data_0510_1925.npy')
-    encoded_data = np.load('/encoded_data_0510_1925.npy') 
+    encoded_data = np.load('encoded_data_0510_1925.npy') 
     
     #encoded_data = np.load('/Users/hwangjaesung/Documents/capstone/Back/encoded_data_0510_1925.npy')
 

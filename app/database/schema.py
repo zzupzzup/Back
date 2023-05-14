@@ -182,7 +182,7 @@ class Users(Base, BaseMixin):
     age = Column(Integer(), nullable=True)
     gender = Column(Enum("woman", "man"), nullable=True)
     store = Column(String(length=30), nullable=True)
-    category = Column(Enum("한식","일식","술집","양식","기타","분식","카페","식육(숯불구이)","중식"))
+    category = Column(Enum("한식","일식","술집","양식","기타","분식","까페","식육(숯불구이)","중식"))
     sns_type = Column(Enum("FB", "G", "K"), nullable=True)
     
 class Stores(Base, BaseMixin):

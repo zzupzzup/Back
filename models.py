@@ -16,7 +16,7 @@ class Category(str, Enum):
     양식 : str = "양식"
     기타 : str = "기타"
     분식 : str = "분식"
-    카페 : str = "카페"
+    까페 : str = "까페"
     식육_숯불구이 : str = "식육(숯불구이)"
     중식 : str = "중식"
     

@@ -16,8 +16,8 @@ class Category(str, Enum):
     양식 : str = "양식"
     기타 : str = "기타"
     분식 : str = "분식"
-    까페 : str = "까페"
-    식육_숯불구이 : str = "식육(숯불구이)"
+    카페 : str = "카페"
+    숯불구이 : str = "숯불구이"
     중식 : str = "중식"
     
 class UserRegister_SignUp(BaseModel): # json 으로 들어오고 json 으로 나가는 데이터들을 basemodel 을 이용해서 객체화   
@@ -27,7 +27,7 @@ class UserRegister_SignUp(BaseModel): # json 으로 들어오고 json 으로 나
     nickname : str = None
     age : int = None
     gender : Gender = None
-    category : Category = None
+    category : List[Category] = None
     
 class UserRegister_SignIn(BaseModel):
     email: EmailStr = None
@@ -56,7 +56,7 @@ class UserToken(BaseModel):
         orm_mode = True
         
 class PersonalModel_Item(BaseModel): # 개인화 추천 모델 일반페이지
-    #storeid : int = None
+    id : int = None
     store : str = None
     address : str = None
     category : str = None
@@ -65,8 +65,9 @@ class PersonalModel_Item(BaseModel): # 개인화 추천 모델 일반페이지
         orm_mode = True
         
 class PersonalModel_Detail_Item(BaseModel): # 개인화 추천 모델 상세페이지 
-    #storeid : int = None
+    id : int = None
     store : str = None
+    img_url : str = None
     address : str = None
     category : str = None
     
@@ -85,5 +86,3 @@ class ChatRRS_Detail_Item(BaseModel):
     class Config:
         orm_mode = True
     
-    
-# db 변수랑 매칭이 되야 할 수 있음

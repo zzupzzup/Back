@@ -17,6 +17,7 @@ from app.database.conn import db
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends
 from app.database.schema import Stores
+import firstModel
 
 
 def create_app():
@@ -36,6 +37,7 @@ def create_app():
     app.include_router(index.router)
     app.include_router(auth.router, tags=["Authentication"], prefix="/auth")
     
+    app.include_router(firstModel.router)
     app.include_router(chatRRS.router)
     app.include_router(personalModel.router) # 개인화 추천 및 개인화 추천 store 상세페이지
     

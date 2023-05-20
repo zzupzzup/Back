@@ -36,7 +36,7 @@ from connectS3 import upload_to_aws, download_from_aws
 # 이 파일의 데이터인 review_0510_1655.csv, encoded_data_0510_1925.npy 는 s3 에 저장되기 때문에 
 # response_model 을 쓸 수가 없다. return 형식을 함수 내에서 정의해서 output 을 뱉음 -> 나중에 response_model 쓸 수 있게 바꿀 예정.
 
-router = APIRouter()
+router = APIRouter() 
 
 cpu_device = torch.device("cpu") 
 
@@ -59,7 +59,7 @@ def fetch_store_info(idxs,scores):
     info_df = pd.DataFrame(info)
 
     info_df.drop_duplicates(subset=['store'],inplace=True)
-
+    
     info_df = info_df[info_df['score']>=60]
 
     # Check
@@ -72,6 +72,8 @@ def fetch_store_info(idxs,scores):
 
     top_n = 5
     results = info_df_merge[['store','address','reviewtext','score','category']].head(top_n)
+    
+    results['score'] = results['score'].apply(lambda x : 99 if x >= 99 else x)
         
     return results
 
@@ -104,13 +106,42 @@ def search(query: str):
     return search_dict
   
 @router.post('/chatRRS', status_code=200) 
-async def chatrrsModel(query : str):
+async def chatrrsModel(query : str, db : Session = Depends(db.session)): 
   search_dict = search(query)
   results = fetch_store_info(**search_dict)
   final = results.to_dict(orient='records')
+  
+  store_list = []
+  for i in results['store']:
+    store_list.append(i)
+     
+  store_info = []
+  for store in store_list:
+    store_info.append(db.query(Stores).filter(Stores.store == store).first())
+    
+  for i, v in enumerate(store_info):
+    final[i]['id'] = v.id
+
   return final
 
-@router.post('/chatRRS/{store}', status_code = 201, response_model=list[ChatRRS_Detail_Item])
-async def chatrrsModel_detail(store : str, db : Session = Depends(db.session)) :
-  return db.query(Reviews).filter(Reviews.store == store).all()
+@router.post('/chatRRS/detail/{id}', status_code = 201)
+async def chatrrsModel_detail(id : int, db : Session = Depends(db.session)):
+  store = db.query(Stores).filter(Stores.id == id ).first().store
+  
+  store_review = db.query(Reviews).filter(Reviews.store == store).all()
+  reviewtext = []
+  for i in store_review:
+       reviewtext.append(i.reviewtext)
+  
+  storeid = db.query(Stores).filter(Stores.store == store).first().id
+  img_url = db.query(Stores).filter(Stores.store == store).first().img_url
+  store_name = db.query(Stores).filter(Stores.store == store).first().store
+  
+  final = {}
+  final['id'] = storeid
+  final['store'] = store_name
+  final['img_url'] = img_url
+  final['reviewtext'] = reviewtext
+  
+  return final
    

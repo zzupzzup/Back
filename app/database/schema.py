@@ -171,8 +171,6 @@ class BaseMixin:
             self._session.flush()
             
 
-
-
 class Users(Base, BaseMixin):
     __tablename__ = "users"
     status = Column(Enum("active", "deleted", "blocked"), default="active")
@@ -182,10 +180,16 @@ class Users(Base, BaseMixin):
     age = Column(Integer(), nullable=True)
     gender = Column(Enum("woman", "man"), nullable=True)
     store = Column(String(length=30), nullable=True)
-    category = Column(Enum("한식","일식","술집","양식","기타","분식","까페","식육(숯불구이)","중식"))
+    category = Column(Enum("한식","일식","술집","양식","기타","분식","카페","숯불구이","중식"))
     sns_type = Column(Enum("FB", "G", "K"), nullable=True)
     
-class Stores(Base, BaseMixin):
+class Users_prefer(Base, BaseMixin):
+    __tablename__ = "users_prefer"
+    nickname = Column(String(length=255), nullable=False)
+    category = Column(String(length=255), nullable=True)
+    store = Column(String(length=255), nullable=True)
+    
+class Stores(Base, BaseMixin): # chatRRS 모델에 사용 
     __tablename__ = "stores"
     store = Column(String(length=30), nullable=False)
     point = Column(FLOAT(), nullable=True)
@@ -196,16 +200,20 @@ class Stores(Base, BaseMixin):
     category = Column(String(length=255), nullable=True)
     join_key = Column(String(length=255), nullable=True)
     menu = Column(String(length=255), nullable=True)
-
-class Users_for_personalModel(Base, BaseMixin):
-    __tablename__ = "users_for_personalModel"
-    nickname = Column(String(length=255), nullable=False)
-    store = Column(String(length=30), nullable=True)
-    nickname = Column(String(length=255), nullable=True)
+    x = Column(FLOAT(), nullable=True)
+    y = Column(FLOAT(), nullable=True)
+    img_url = Column(String(length=255), nullable=True)
     
-class Reviews(Base, BaseMixin):
+class Reviews(Base, BaseMixin): # chatRRS 모델에 사용 
     __tablename__ = "reviews"
     store = Column(String(length=30), nullable=False)
     nickname = Column(String(length=255), nullable=True)
     reviewtext = Column(Text(), nullable= True)
     review = Column(Text(), nullable=True)
+
+class Users_for_personalModel(Base, BaseMixin): # personal 모델에 사용
+    __tablename__ = "users_for_personalModel"
+    nickname = Column(String(length=255), nullable=False)
+    store = Column(String(length=30), nullable=True)    
+
+    

@@ -26,7 +26,7 @@ def make_pivot_table(df):
     pivoted_df = pd.pivot_table(grouped_df,values='store',index='nickname',columns='category')
 
     pivoted_df = pivoted_df.fillna(0)
-    return_df = pivoted_df.astype({'기타':'int','까페':'int','분식':'int','술집':'int','식육(숯불구이)':'int',
+    return_df = pivoted_df.astype({'기타':'int','카페':'int','분식':'int','술집':'int','숯불구이':'int',
                                     '양식':'int','일식':'int','중식':'int','한식':'int'})
     
     return return_df

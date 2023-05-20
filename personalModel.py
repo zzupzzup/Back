@@ -19,6 +19,8 @@ from models import PersonalModel_Item, PersonalModel_Detail_Item
 
 router = APIRouter()
 
+
+
 @router.get('/personalModel',  status_code=201, response_model=list[PersonalModel_Item]) 
 async def personalModel(db : Session = Depends(db.session)) :
 

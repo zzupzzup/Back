@@ -24,8 +24,7 @@ from sqlalchemy.orm import Session
 from app.database.conn import db
 from app.database.schema import Stores
 from models import PersonalModel_Item, PersonalModel_Detail_Item
-
-
+from fastapi.responses import JSONResponse
 
 router = APIRouter()
 
@@ -65,6 +64,9 @@ async def firstModel(user_category: str, db : Session = Depends(db.session)):
     result = []
     for i in firstRec(user_category) :
         result.append(db.query(Stores).filter(Stores.store == i).first())
+    
+    if len(result) == 0:
+        JSONResponse(status_code=400, content=dict(msg="NO_RESULT"))
     return result
 
 # @router.get('/firstModel/detail/{id}',  status_code=201, response_model=PersonalModel_Detail_Item) # response_model 재활용

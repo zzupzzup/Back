@@ -31,6 +31,7 @@ from sqlalchemy.sql import text
 
 from os import path
 from connectS3 import upload_to_aws, download_from_aws
+from fastapi.responses import JSONResponse
 
 
 # 이 파일의 데이터인 review_0510_1655.csv, encoded_data_0510_1925.npy 는 s3 에 저장되기 때문에 
@@ -110,6 +111,9 @@ async def chatrrsModel(query : str, db : Session = Depends(db.session)):
   search_dict = search(query)
   results = fetch_store_info(**search_dict)
   final = results.to_dict(orient='records')
+
+  if len(results) ==0 :
+    JSONResponse(status_code=400, content=dict(msg="NO_RESULT"))
   
   store_list = []
   for i in results['store']:
@@ -121,7 +125,7 @@ async def chatrrsModel(query : str, db : Session = Depends(db.session)):
     
   for i, v in enumerate(store_info):
     final[i]['id'] = v.id
-
+    
   return final
 
 # @router.post('/chatRRS/detail/{id}', status_code = 201)

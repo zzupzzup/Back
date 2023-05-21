@@ -18,9 +18,9 @@ class Config:
 @dataclass
 class LocalConfig(Config):
     PROJ_RELOAD: bool = True
-    #DB_URL: str = "mysql+pymysql://travis:ghkd@localhost/notification_api?charset=utf8mb4" # mysql+pymysql://{user}:{password}@{endpoint}:{port}/{db} #local database
+    DB_URL: str = "mysql+pymysql://travis:ghkd@localhost/notification_api?charset=utf8mb4" # mysql+pymysql://{user}:{password}@{endpoint}:{port}/{db} #local database
     #DB_URL: str = "mysql+pymysql://travis:ghkd@svc.sel3.cloudtype.app:31955/notification_api?charset=utf8mb4" # cloudtype 에 배포한 서버와 연결 #cloudtype database
-    DB_URL: str = "mysql+pymysql://root:wotjddlWkd@jsdb.cojmnvjt9cfs.ap-northeast-2.rds.amazonaws.com:3306/jsdb?charset=utf8mb4" # aws 에 배포한 서버와 연결 #aws database
+    #DB_URL: str = "mysql+pymysql://root:wotjddlWkd@jsdb.cojmnvjt9cfs.ap-northeast-2.rds.amazonaws.com:3306/jsdb?charset=utf8mb4" # aws 에 배포한 서버와 연결 #aws database
 
 @dataclass
 class ProdConfig(Config):

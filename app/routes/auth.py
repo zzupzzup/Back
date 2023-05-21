@@ -38,6 +38,9 @@ async def register(sns_type: SnsType, reg_info: UserRegister_SignUp, session: Se
         for category in reg_info.category:
             Users_prefer.create(session, auto_commit=True, nickname=reg_info.nickname, category=category)
         token = dict(Authorization=f"Bearer {create_access_token(data=UserToken.from_orm(new_user).dict(exclude={'pw', 'marketing_agree'}),)}")
+        session.query(Users).filter(Users.email == new_user.email).update({'token' : token['Authorization'].split(' ')[1]})
+        session.commit()
+
         return token
     return JSONResponse(status_code=400, content=dict(msg="NOT_SUPPORTED"))
 

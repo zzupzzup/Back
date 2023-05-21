@@ -182,6 +182,7 @@ class Users(Base, BaseMixin):
     store = Column(String(length=30), nullable=True)
     category = Column(Enum("한식","일식","술집","양식","기타","분식","카페","숯불구이","중식"))
     sns_type = Column(Enum("FB", "G", "K"), nullable=True)
+    token = Column(String(length=255), nullable=True)
     
 class Users_prefer(Base, BaseMixin):
     __tablename__ = "users_prefer"

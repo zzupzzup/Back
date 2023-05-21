@@ -6,7 +6,7 @@ import numpy as np
 import build_matrix as bm
 import CF_recommend as cf_r
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header
 from sqlalchemy import create_engine, text
 from app.common.config import LocalConfig
 
@@ -22,7 +22,7 @@ router = APIRouter()
 
 
 @router.get('/personalModel',  status_code=201, response_model=list[PersonalModel_Item]) 
-async def personalModel(db : Session = Depends(db.session)) :
+async def personalModel(token : str = Header(default=None), db : Session = Depends(db.session)) :
 
     engine = create_engine(LocalConfig.DB_URL)
     query_user = 'SELECT * FROM users_for_personalModel'
@@ -44,7 +44,8 @@ async def personalModel(db : Session = Depends(db.session)) :
 
 
     threshold_user = user_tb[user_tb['nickname'].map(user_tb['nickname'].value_counts()) > args['n_value_counts']]
-    new_user = [db.query(Users).order_by(Users.id.desc()).first().nickname]
+    new_user = [db.query(Users).filter(Users.token == token).first().nickname]
+    #new_user = [db.query(Users).order_by(Users.id.desc()).first().nickname]
 
 
     # 기존에 있는 유저들
@@ -105,11 +106,11 @@ async def personalModel(db : Session = Depends(db.session)) :
     
     return final
 
-#personalModel 상세페이지 store 정보 전달
-@router.get('/personalModel/detail/{id}',  status_code=201, response_model=PersonalModel_Detail_Item)
-async def personalModel_detail(id : int, db : Session = Depends(db.session)) :
-    store = db.query(Stores).filter(Stores.id == id ).first().store
-    return db.query(Stores).filter(Stores.store == store).first()
+# #personalModel 상세페이지 store 정보 전달
+# @router.get('/personalModel/detail/{id}',  status_code=201, response_model=PersonalModel_Detail_Item)
+# async def personalModel_detail(id : int, db : Session = Depends(db.session)) :
+#     store = db.query(Stores).filter(Stores.id == id ).first().store
+#     return db.query(Stores).filter(Stores.store == store).first()
 
 
 

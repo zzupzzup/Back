@@ -67,7 +67,7 @@ async def firstModel(user_category: str, db : Session = Depends(db.session)):
         result.append(db.query(Stores).filter(Stores.store == i).first())
     return result
 
-@router.get('/firstModel/detail/{id}',  status_code=201, response_model=PersonalModel_Detail_Item) # response_model 재활용
-async def firstModel_detail(id : int, db : Session = Depends(db.session)) :
-    store = db.query(Stores).filter(Stores.id == id ).first().store
-    return db.query(Stores).filter(Stores.store == store).first()
+# @router.get('/firstModel/detail/{id}',  status_code=201, response_model=PersonalModel_Detail_Item) # response_model 재활용
+# async def firstModel_detail(id : int, db : Session = Depends(db.session)) :
+#     store = db.query(Stores).filter(Stores.id == id ).first().store
+#     return db.query(Stores).filter(Stores.store == store).first()

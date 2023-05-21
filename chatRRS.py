@@ -124,24 +124,24 @@ async def chatrrsModel(query : str, db : Session = Depends(db.session)):
 
   return final
 
-@router.post('/chatRRS/detail/{id}', status_code = 201)
-async def chatrrsModel_detail(id : int, db : Session = Depends(db.session)):
-  store = db.query(Stores).filter(Stores.id == id ).first().store
+# @router.post('/chatRRS/detail/{id}', status_code = 201)
+# async def chatrrsModel_detail(id : int, db : Session = Depends(db.session)):
+#   store = db.query(Stores).filter(Stores.id == id ).first().store
   
-  store_review = db.query(Reviews).filter(Reviews.store == store).all()
-  reviewtext = []
-  for i in store_review:
-       reviewtext.append(i.reviewtext)
+#   store_review = db.query(Reviews).filter(Reviews.store == store).all()
+#   reviewtext = []
+#   for i in store_review:
+#        reviewtext.append(i.reviewtext)
   
-  storeid = db.query(Stores).filter(Stores.store == store).first().id
-  img_url = db.query(Stores).filter(Stores.store == store).first().img_url
-  store_name = db.query(Stores).filter(Stores.store == store).first().store
+#   storeid = db.query(Stores).filter(Stores.store == store).first().id
+#   img_url = db.query(Stores).filter(Stores.store == store).first().img_url
+#   store_name = db.query(Stores).filter(Stores.store == store).first().store
   
-  final = {}
-  final['id'] = storeid
-  final['store'] = store_name
-  final['img_url'] = img_url
-  final['reviewtext'] = reviewtext
+#   final = {}
+#   final['id'] = storeid
+#   final['store'] = store_name
+#   final['img_url'] = img_url
+#   final['reviewtext'] = reviewtext
   
-  return final
+#   return final
    

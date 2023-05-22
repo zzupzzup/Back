@@ -23,10 +23,13 @@ async def detail_page(id : int, db : Session = Depends(db.session)) :
     store_name = db.query(Stores).filter(Stores.store == store).first().store
     store_address = db.query(Stores).filter(Stores.store == store).first().address
     store_category = db.query(Stores).filter(Stores.store == store).first().category
+    store_point = db.query(Stores).filter(Stores.store == store).first().point
+    
     
     final = {}
     final['id'] = storeid
     final['store'] = store_name
+    final['point'] = store_point
     final['img_url'] = img_url
     final['address'] = store_address
     final['category'] = store_category

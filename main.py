@@ -53,10 +53,9 @@ app = create_app()
 # cors에러 해결 
 origins = ["*"]
 
-origins = [
-    "http://localhost:3000",
-    "https://zzupzzup-d3969.web.app"
-]
+# origins = [
+#     "http://localhost:3000"
+# ]
 
 app.add_middleware(
     CORSMiddleware,

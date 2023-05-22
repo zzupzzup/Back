@@ -16,13 +16,15 @@ from app.database.schema import Users, Stores
 from starlette.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from models import PersonalModel_Item, PersonalModel_Detail_Item
+from typing import Optional
+
 
 router = APIRouter()
 
 
 
 @router.get('/personalModel',  status_code=201, response_model=list[PersonalModel_Item]) 
-async def personalModel(token : str = Header(default=None), db : Session = Depends(db.session)) :
+async def personalModel(token : Optional[str] = Header(None, convert_underscores=False), db : Session = Depends(db.session)) :
 
     engine = create_engine(LocalConfig.DB_URL)
     query_user = 'SELECT * FROM users_for_personalModel'

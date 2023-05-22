@@ -55,6 +55,7 @@ origins = ["*"]
 
 origins = [
     "http://localhost:3000",
+    "https://zzupzzup-d3969.web.app"
 ]
 
 app.add_middleware(

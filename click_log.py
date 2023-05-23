@@ -31,5 +31,5 @@ async def click_log(id : int, user_id :int , db : Session = Depends(db.session))
         
         click_log = list(set(click_log))
     
-    return {'click_log' : click_log, 'cnt' : cnt}
+    return {'click_log' : click_log, 'click_log_cnt' : cnt}
 

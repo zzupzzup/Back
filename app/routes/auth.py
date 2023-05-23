@@ -64,6 +64,7 @@ async def login(sns_type: SnsType, user_info: UserRegister_SignIn, db: Session =
         
         # response_model 을 쓰고 싶은데 db 에서 나온 값이랑 모델에서 나온 값을 한 번에 처리하는 방법을 모르겠음
         result = token
+        result['id'] = search_db_users.id
         result['email'] = search_db_users.email
         result['nickname'] = search_db_users.nickname
         result['age'] = search_db_users.age

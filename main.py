@@ -35,11 +35,11 @@ def create_app():
     # 레디스 이니셜라이즈
     # 미들웨어 정의
     # cors에러 해결 
-    origins = ["*"]
+    #origins = ["*"]
 
-    # origins = [
-    #     "http://localhost:3000"
-    # ]
+    origins = [
+        "http://localhost:3000"
+    ]
 
     app.add_middleware(
     CORSMiddleware,

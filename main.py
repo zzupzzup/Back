@@ -50,7 +50,7 @@ def create_app():
     
     return app
 
-app = FastAPI()
+app = create_app()
 
 origins = [
     "http://localhost:3000"

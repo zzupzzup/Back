@@ -58,7 +58,6 @@ def firstRec(user_category: str):
     
     return finals
 
-
 @router.get('/firstModel', status_code=201, response_model=list[PersonalModel_Item]) # response_model 재활용
 async def firstModel(user_category: str, db : Session = Depends(db.session)):
     result = []

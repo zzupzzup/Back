@@ -34,7 +34,7 @@ def create_app():
     # 데이터 베이스 이니셜라이즈
     # 레디스 이니셜라이즈
     # 미들웨어 정의
-    # cors에러 해결 
+    # cors에러 해결
 
 
     # 라우터 정의
@@ -50,20 +50,19 @@ def create_app():
     
     return app
 
-app = create_app() 
-
-origins = ["*"]
+app = create_app()
 
 origins = [
     "http://localhost:3000"
+    "http://192.168.0.71:3000"
 ]
 
 app.add_middleware(
-CORSMiddleware,
-allow_origins=["*"],
-allow_credentials=True,
-allow_methods=["*"],
-allow_headers=["*"],
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

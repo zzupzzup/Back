@@ -18,5 +18,18 @@ async def click_log(id : int, user_id :int , db : Session = Depends(db.session))
         JSONResponse(status_code=400, content=dict(msg="NO_RESULT"))
 
     Users_prefer.create(db, auto_commit=True, nickname=user_nickname, store=user_click_store)
-    Users_for_personalModel.create(db, auto_commit=True, nickname=user_nickname, store=user_click_store)  
-    return JSONResponse(status_code=201, content=dict(msg="SUCCESS"))
+    Users_for_personalModel.create(db, auto_commit=True, nickname=user_nickname, store=user_click_store) 
+    
+    results = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).all() 
+    
+    click_log = []
+    cnt = 0
+    for result in results:
+        if result.store != None:
+            click_log.append(result.store)
+            cnt += 1
+        
+        click_log = list(set(click_log))
+    
+    return {'click_log' : click_log, 'cnt' : cnt}
+

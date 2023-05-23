@@ -43,10 +43,10 @@ def create_app():
     
     app.include_router(firstModel.router)
     app.include_router(chatRRS.router)
-    app.include_router(personalModel.router) # 개인화 추천 및 개인화 추천 store 상세페이지
+    # app.include_router(personalModel.router) # 개인화 추천 및 개인화 추천 store 상세페이지
     
     app.include_router(detail_page.router) # 상세 페이지
-    app.include_router(click_log.router) # click_log 
+    # app.include_router(click_log.router) # click_log 
     
     return app
 

@@ -4,13 +4,14 @@ from app.database.conn import db
 from app.database.schema import Users, Users_for_personalModel, Users_prefer, Stores
 from fastapi.responses import JSONResponse
 from typing import Optional
-
+from starlette.requests import Request
+import requests
 
 router = APIRouter()
 
 @router.post('/click_log/{id}', status_code = 201)
-async def click_log(id : int, token : Optional[str] = Header(None, convert_underscores=False) , db : Session = Depends(db.session)) :
-    user_nickname = db.query(Users).filter(Users.token == token).first().nickname
+async def click_log(id : int, user_id :int , db : Session = Depends(db.session)) :
+    user_nickname = db.query(Users).filter(Users.id == user_id).first().nickname
     user_click_store = db.query(Stores).filter(Stores.id == id).first().store
 
     if user_nickname == None or user_click_store == None:

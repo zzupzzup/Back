@@ -24,7 +24,7 @@ router = APIRouter()
 
 
 @router.get('/personalModel',  status_code=201, response_model=list[PersonalModel_Item]) 
-async def personalModel(token : Optional[str] = Header(None, convert_underscores=False), db : Session = Depends(db.session)) :
+async def personalModel(user_id : int, db : Session = Depends(db.session)) :
 
     engine = create_engine(LocalConfig.DB_URL)
     query_user = 'SELECT * FROM users_for_personalModel'
@@ -46,7 +46,7 @@ async def personalModel(token : Optional[str] = Header(None, convert_underscores
 
 
     threshold_user = user_tb[user_tb['nickname'].map(user_tb['nickname'].value_counts()) > args['n_value_counts']]
-    new_user = [db.query(Users).filter(Users.token == token).first().nickname]
+    new_user = [db.query(Users).filter(Users.id == user_id).first().nickname]
     #new_user = [db.query(Users).order_by(Users.id.desc()).first().nickname]
 
 

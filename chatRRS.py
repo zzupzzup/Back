@@ -39,6 +39,8 @@ from fastapi.responses import JSONResponse
 
 router = APIRouter() 
 
+
+
 cpu_device = torch.device("cpu") 
 
 # Check

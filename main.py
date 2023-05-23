@@ -35,19 +35,7 @@ def create_app():
     # 레디스 이니셜라이즈
     # 미들웨어 정의
     # cors에러 해결 
-    #origins = ["*"]
 
-    origins = [
-        "http://localhost:3000"
-    ]
-
-    app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-    )
 
     # 라우터 정의
     app.include_router(index.router)
@@ -63,6 +51,20 @@ def create_app():
     return app
 
 app = create_app() 
+
+#origins = ["*"]
+
+origins = [
+    "http://localhost:3000"
+]
+
+app.add_middleware(
+CORSMiddleware,
+allow_origins=origins,
+allow_credentials=True,
+allow_methods=["*"],
+allow_headers=["*"],
+)
 
 
 if __name__ == "__main__":

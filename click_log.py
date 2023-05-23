@@ -22,14 +22,23 @@ async def click_log(id : int, user_id :int , db : Session = Depends(db.session))
     
     results = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).all() 
     
-    click_log = []
     cnt = 0
     for result in results:
         if result.store != None:
-            click_log.append(result.store)
             cnt += 1
-        
-        click_log = list(set(click_log))
     
-    return {'click_log' : click_log, 'click_log_cnt' : cnt}
+    return {'click_log_cnt' : cnt}
 
+@router.get('/click_list', status_code=201)
+async def click_list(user_id : int, db:Session = Depends(db.session)):
+    user_nickname = db.query(Users).filter(Users.id == user_id).first().nickname
+    results = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).all() 
+    
+    click_list = []
+    for result in results:
+        if result.store != None:
+            click_list.append(result.store)
+        
+    click_list = list(set(click_list))
+    
+    return {'click_list' :click_list}

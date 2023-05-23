@@ -3,7 +3,6 @@ from os import path, environ
 
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
 
-
 @dataclass
 class Config:
     """
@@ -15,14 +14,14 @@ class Config:
     DB_ECHO: bool = True # ECHO -> 트루 -> 터미널 실행하면 에코를 함
 
 
-@dataclass
+@dataclass 
 class LocalConfig(Config):
     PROJ_RELOAD: bool = True
     #DB_URL: str = "mysql+pymysql://travis:ghkd@localhost/notification_api?charset=utf8mb4" # mysql+pymysql://{user}:{password}@{endpoint}:{port}/{db} #local database
     DB_URL: str = "mysql+pymysql://root:wotjddlWkd@jsdb.cojmnvjt9cfs.ap-northeast-2.rds.amazonaws.com:3306/jsdb?charset=utf8mb4" # aws 에 배포한 서버와 연결 #aws database
 
-@dataclass
-class ProdConfig(Config):
+@dataclass 
+class ProdConfig(Config): 
     PROJ_RELOAD: bool = False
 
 

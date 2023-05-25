@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from typing import Optional
 from starlette.requests import Request
 import requests
-
+from models import Click_list
 router = APIRouter()
 
 @router.post('/click_log/{id}', status_code = 201)
@@ -29,7 +29,7 @@ async def click_log(id : int, user_id :int , db : Session = Depends(db.session))
     
     return {'click_log_cnt' : cnt}
 
-@router.get('/click_list', status_code=201)
+@router.get('/click_list', status_code=201, response_model=list[Click_list])
 async def click_list(user_id : int, db:Session = Depends(db.session)):
     user_nickname = db.query(Users).filter(Users.id == user_id).first().nickname
     results = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).all() 
@@ -38,7 +38,19 @@ async def click_list(user_id : int, db:Session = Depends(db.session)):
     for result in results:
         if result.store != None:
             click_list.append(result.store)
-        
-    click_list = list(set(click_list))
+
+    reversed_click_list = list(reversed(click_list))
     
-    return {'click_list' :click_list}
+    new_click_list = []
+    for v in reversed_click_list:
+        if v not in new_click_list:
+            new_click_list.append(v)
+    
+    new_click_list = list(reversed(new_click_list))
+    
+    final = []
+    for i in new_click_list:
+        final.append(db.query(Stores).filter(Stores.store == i).first())
+    
+        
+    return final

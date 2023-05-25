@@ -14,6 +14,7 @@ import csv
 
 import select_type as st
 import CD_recommendation as CD_r
+import log_recommendation as lr
 
 from fastapi import APIRouter, Depends
 from sqlalchemy import create_engine, text
@@ -22,7 +23,7 @@ from os import path
 from connectS3 import download_from_aws
 from sqlalchemy.orm import Session
 from app.database.conn import db
-from app.database.schema import Stores
+from app.database.schema import Stores, Users_prefer, Users
 from models import PersonalModel_Item, PersonalModel_Detail_Item
 from fastapi.responses import JSONResponse
 
@@ -58,15 +59,68 @@ def firstRec(user_category: str):
     
     return finals
 
-@router.get('/firstModel', status_code=201, response_model=list[PersonalModel_Item]) # response_model 재활용
-async def firstModel(user_category: str, db : Session = Depends(db.session)):
-    result = []
-    for i in firstRec(user_category) :
-        result.append(db.query(Stores).filter(Stores.store == i).first())
+@router.get('/firstModel', status_code=201, response_model=list[PersonalModel_Item]) # response_model 재활용, response_model=list[PersonalModel_Item]
+async def firstModel(user_category: str, user_id : int, db : Session = Depends(db.session)):
+    user_nickname = db.query(Users).filter(Users.id == user_id).first().nickname
+    user_click_log = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).all()
     
-    if len(result) == 0:
-        JSONResponse(status_code=400, content=dict(msg="NO_RESULT"))
-    return result
+    engine = create_engine(LocalConfig.DB_URL)
+    query_user = 'SELECT * FROM stores'
+    stores = pd.read_sql_query(sql=text(query_user), con=engine.connect())
+    
+    user_clicked_stores = []
+    for click in user_click_log :
+        if click.store != None:
+           user_clicked_stores.append(click.store)
+    
+    input_log = user_clicked_stores # 여기는 고객이 클릭한 가게이름 리스트를 넘겨주세요
+
+    df_log = lr.get_df_log(input_log, stores)
+    
+    first = firstRec(user_category)
+    
+    if len(df_log) == 0:
+        
+        final1 = []
+        for i in first:
+            final1.append(db.query(Stores).filter(Stores.store==i).first())
+        
+        return final1  # 로그 없을때 그냥 CD_recomandation 결과 출력
+        print(first)    # 결과 출력하는 부분
+    else:  # 클릭한 식당의 카테고리와 같은 다른 식당 2개씩 더 추천(기존 추천된 항목 변하지 않고 추가만됨)
+        remove_stores = lr.selected_remove(stores, first) 
+        log_stores = lr.plus_log(remove_stores, df_log)
+        result = log_stores + first
+        
+        final2 = []
+        for i in result:
+            final2.append(db.query(Stores).filter(Stores.store==i).first())
+        
+        return final2 
+        
+    
+
+    # user_click_list = []
+    # for click in user_click_log:
+    #     if click.store != None:
+    #         user_click_list.append(click.store)
+    
+    
+    # if log.empty:   # 로그 없을때 그냥 CD_recomandation 결과 출력
+    #     return first
+    # else:  # 클릭한 식당의 카테고리와 같은 다른 식당 2개씩 더 추천(기존 추천된 항목 변하지 않고 추가만됨)
+    #     remove_stores = lr.selected_remove(user_click_list, first) 
+    #     log_stores = lr.plus_log(remove_stores, log)
+    #     result = log_stores+first
+    #     return result
+
+    # if len(first) == 0 and len(result) ==0 :
+    #     JSONResponse(status_code=400, content=dict(msg="NO_RESULT"))
+    # return JSONResponse(status_code=201, content=dict(msg="SUCCESS"))
+    
+    
+    
+    return stores
 
 # @router.get('/firstModel/detail/{id}',  status_code=201, response_model=PersonalModel_Detail_Item) # response_model 재활용
 # async def firstModel_detail(id : int, db : Session = Depends(db.session)) :

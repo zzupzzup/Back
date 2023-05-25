@@ -39,8 +39,6 @@ from fastapi.responses import JSONResponse
 
 router = APIRouter() 
 
-
-
 cpu_device = torch.device("cpu") 
 
 # Check
@@ -72,7 +70,9 @@ def fetch_store_info(idxs,scores):
     store = pd.read_sql_query(sql=text(query_store), con=engine.connect())
     
     info_df_merge = info_df.merge(store,left_on='store',right_on='store',how='left')
-
+        
+    #cnt = len(info_df_merge.loc[info_df_merge['score'] >= 0.7])
+    
     top_n = 5
     results = info_df_merge[['store','address','reviewtext','score','category']].head(top_n)
     

@@ -85,4 +85,11 @@ class ChatRRS_Detail_Item(BaseModel):
     
     class Config:
         orm_mode = True
+        
+class Click_list(BaseModel):
+    store : str = None
+    category : str = None
+    address : str = None
     
+    class Config:
+        orm_mode = True

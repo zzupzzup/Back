@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database.conn import db
 from app.database.schema import Stores, Users_prefer, Users
-from models import PersonalModel_Item
+from models import PersonalModel_Item, PersonalModel_Detail_Item
 
 
 router = APIRouter() 
@@ -55,7 +55,7 @@ def recommend_20s(sex,category,store_tb):
     
     return recommended_list
 
-@router.get('/boysandgirls', status_code=201, response_model=list[PersonalModel_Item])
+@router.get('/boysandgirls', status_code=201, response_model=list[PersonalModel_Detail_Item])
 async def boysandgirls(user_id : int, db : Session = Depends(db.session)):
     user_sex = db.query(Users).filter(Users.id == user_id).first().gender
     user_nickname = db.query(Users).filter(Users.id == user_id).first().nickname
@@ -71,19 +71,16 @@ async def boysandgirls(user_id : int, db : Session = Depends(db.session)):
     final = []
     for result in results:
           final.append(db.query(Stores).filter(Stores.store == result).first())
+    
     return final
     
 
+# # Change DB 로부터 유저 정보를 받아오기
 
+# # 유저 테이블로부터 성별 받아오기
+# sex = 'woman'
 
-# Change DB 로부터 유저 정보를 받아오기
+# # 유저 테이블로부터 선호하는 카테고리 정보 받아오기
+# category = ['까페','일식','양식']
 
-# 유저 테이블로부터 성별 받아오기
-sex = 'woman'
-
-# 유저 테이블로부터 선호하는 카테고리 정보 받아오기
-category = ['까페','일식','양식']
-
-
-
-print(recommend_20s(sex,category,store_tb))
+# print(recommend_20s(sex,category,store_tb))

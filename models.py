@@ -4,7 +4,6 @@ from typing import List
 from pydantic.main import BaseModel
 from pydantic.networks import EmailStr
 
-
 class Gender(str, Enum):
     woman : str = "woman"
     man : str = "man"

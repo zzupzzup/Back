@@ -46,7 +46,7 @@ async def click_list(user_id : int, db:Session = Depends(db.session)):
         if v not in new_click_list:
             new_click_list.append(v)
     
-    new_click_list = list(reversed(new_click_list))
+    # new_click_list = list(reversed(new_click_list))
     
     final = []
     for i in new_click_list:

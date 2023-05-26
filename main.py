@@ -13,6 +13,7 @@ import chatRRS
 import click_log
 import detail_page
 import boysandgirls
+import similarRestaurant
 from connectS3 import upload_to_aws, download_from_aws
 from cloudpathlib import CloudPath
 from sqlalchemy.orm import Session
@@ -50,7 +51,7 @@ def create_app():
     app.include_router(click_log.router) # click_log 
     
     app.include_router(boysandgirls.router)
-    
+    # app.include_router(similarRestaurant.router)
     return app
 
 app = create_app()

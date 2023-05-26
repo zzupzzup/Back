@@ -87,6 +87,7 @@ class ChatRRS_Detail_Item(BaseModel):
         orm_mode = True
         
 class Click_list(BaseModel):
+    id : int = None
     store : str = None
     category : str = None
     address : str = None

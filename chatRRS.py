@@ -71,9 +71,9 @@ def fetch_store_info(idxs,scores):
     
     info_df_merge = info_df.merge(store,left_on='store',right_on='store',how='left')
         
-    #cnt = len(info_df_merge.loc[info_df_merge['score'] >= 0.7])
+    cnt = len(info_df_merge.loc[info_df_merge['score'] >= 0.7])
     
-    top_n = 5
+    top_n = cnt
     results = info_df_merge[['store','address','reviewtext','score','category']].head(top_n)
     
     results['score'] = results['score'].apply(lambda x : 99 if x >= 99 else x)

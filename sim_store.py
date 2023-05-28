@@ -1,14 +1,4 @@
-
 import random
-import pandas as pd
-
-# from fastapi import APIRouter, Depends
-# from sqlalchemy import create_engine, text
-# from app.common.config import LocalConfig
-
-# engine = create_engine(LocalConfig.DB_URL)
-# query_user = 'SELECT * FROM stores'
-# stores = pd.read_sql_query(sql=text(query_user), con=engine.connect())
 
 def random_numbers(lst, n):
     if n > len(lst):
@@ -32,14 +22,16 @@ def get_sim_store(sims, store_id):
     if len(result) < 10:
         n = 10-len(result)
         result += random_numbers(same_cat, n)
+    else:
+        result = random_numbers(result, 10)
             
     return result
 
 def name_to_id(input_name, stores):
     for i in range(len(stores)):
-        if input_name == stores['store'][i]: 
+        if input_name == stores['store'][i]:
             input_id = stores['id'][i]
-        
+    
     return input_id
 
 def id_to_name(result_ids, stores):

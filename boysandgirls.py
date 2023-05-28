@@ -67,6 +67,8 @@ async def boysandgirls(user_id : int, db : Session = Depends(db.session)):
             user_category.append(category.category)
             
     results = recommend_20s(user_sex, user_category, store_tb)
+    
+    results = list(set(results))
         
     final = []
     for result in results:
@@ -74,13 +76,3 @@ async def boysandgirls(user_id : int, db : Session = Depends(db.session)):
     
     return final
     
-
-# # Change DB 로부터 유저 정보를 받아오기
-
-# # 유저 테이블로부터 성별 받아오기
-# sex = 'woman'
-
-# # 유저 테이블로부터 선호하는 카테고리 정보 받아오기
-# category = ['까페','일식','양식']
-
-# print(recommend_20s(sex,category,store_tb))

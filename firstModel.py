@@ -77,7 +77,7 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
 
     df_log = lr.get_df_log(input_log, stores)
     
-    if len(df_log) == 0:
+    if df_log.empty:
         
         first = firstRec(user_category)
         Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=' '.join(first))

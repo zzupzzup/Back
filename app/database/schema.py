@@ -189,6 +189,7 @@ class Users_prefer(Base, BaseMixin):
     nickname = Column(String(length=255), nullable=False)
     category = Column(String(length=255), nullable=True)
     store = Column(String(length=255), nullable=True)
+    firstModelResult = Column(String(length=1024), nullable=True)
     
 class Stores(Base, BaseMixin): # chatRRS 모델에 사용 
     __tablename__ = "stores"

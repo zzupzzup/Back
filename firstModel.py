@@ -77,17 +77,24 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
 
     df_log = lr.get_df_log(input_log, stores)
     
-    first = firstRec(user_category)
-    
     if len(df_log) == 0:
         
+        first = firstRec(user_category)
+        Users_prefer.create(db, auto_commit=True, firstModelResult=' '.join(first))
+            
         final1 = []
         for i in first:
             final1.append(db.query(Stores).filter(Stores.store==i).first())
         
         return final1  # 로그 없을때 그냥 CD_recomandation 결과 출력
-        print(first)    # 결과 출력하는 부분
+    
+    
     else:  # 클릭한 식당의 카테고리와 같은 다른 식당 2개씩 더 추천(기존 추천된 항목 변하지 않고 추가만됨)
+        
+        first = []
+        first_str = db.query(Users_prefer).filter(Users_prefer.id == user_id).first().firstModelResult
+        first.append(first_str.split(' '))
+        
         remove_stores = lr.selected_remove(stores, first) 
         log_stores = lr.plus_log(remove_stores, df_log)
         result = log_stores + first
@@ -97,6 +104,26 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
             final2.append(db.query(Stores).filter(Stores.store==i).first())
         
         return final2 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
     
 
@@ -120,7 +147,7 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
     
     
     
-    return stores
+    #return stores
 
 # @router.get('/firstModel/detail/{id}',  status_code=201, response_model=PersonalModel_Detail_Item) # response_model 재활용
 # async def firstModel_detail(id : int, db : Session = Depends(db.session)) :

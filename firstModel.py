@@ -74,10 +74,8 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
            user_clicked_stores.append(click.store)
     
     input_log = user_clicked_stores # 여기는 고객이 클릭한 가게이름 리스트를 넘겨주세요
-
-    df_log = lr.get_df_log(input_log, stores)
     
-    if df_log.empty:
+    if len(user_click_log) == 0:
         
         first = firstRec(user_category)
         Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=' '.join(first))
@@ -95,6 +93,8 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
         first_str = db.query(Users_prefer).filter(Users_prefer.id == user_id).first().firstModelResult
         first.append(first_str.split(' '))
         
+        df_log = lr.get_df_log(input_log, stores)
+
         remove_stores = lr.selected_remove(stores, first) 
         log_stores = lr.plus_log(remove_stores, df_log)
         result = log_stores + first

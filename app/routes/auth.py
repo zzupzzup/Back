@@ -74,7 +74,8 @@ async def login(sns_type: SnsType, user_info: UserRegister_SignIn, db: Session =
         tmp_click = []
         cnt = 0
         for prefer in search_db_users_prefer :
-            tmp_category.append(prefer.category)
+            if prefer.category != None:
+                tmp_category.append(prefer.category)
             if prefer.store != None:
                 tmp_click.append(prefer.store)
                 cnt += 1

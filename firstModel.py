@@ -80,7 +80,7 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
     if len(df_log) == 0:
         
         first = firstRec(user_category)
-        Users_prefer.create(db, auto_commit=True, firstModelResult=' '.join(first))
+        Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=' '.join(first))
             
         final1 = []
         for i in first:

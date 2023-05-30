@@ -58,7 +58,7 @@ def firstRec(user_category: str):
     
     return finals
 
-@router.get('/firstModel', status_code=201, response_model=list[PersonalModel_Item]) # response_model 재활용, response_model=list[PersonalModel_Item]
+@router.get('/firstModel', status_code=201) # response_model 재활용, response_model=list[PersonalModel_Item]
 async def firstModel(user_category: str, user_id : int, db : Session = Depends(db.session)):
     user_nickname = db.query(Users).filter(Users.id == user_id).first().nickname
     user_click_log = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).all()
@@ -85,19 +85,26 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
         
         return final1  # 로그 없을때 그냥 CD_recomandation 결과 출력
     
-    
     else:  # 클릭한 식당의 카테고리와 같은 다른 식당 2개씩 더 추천(기존 추천된 항목 변하지 않고 추가만됨)
         
-        first_ = []
+        
         #first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).first().firstModelResult
-        first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).order_by(Users_prefer.updated_at.desc()).first().firstModelResult
-        first_ = eval(first_str)
+        #first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).order_by(Users_prefer.updated_at.desc()).first().firstModelResult
+        first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).all()
+        
+        first_str_list = []
+        for i in first_str:
+            if i.firstModelResult != None: 
+                first_str_list.append(i.firstModelResult)
+        
+        first_ = first_str_list[0]
+        first_ = eval(first_)
         
         df_log = lr.get_df_log(input_log, stores)
 
         remove_stores = lr.selected_remove(stores, first_) 
         log_stores = lr.plus_log(remove_stores, df_log)
-        result = log_stores + first_
+        result = list(log_stores) + first_
         
         Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=str(result))
         
@@ -106,7 +113,7 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
             final2.append(db.query(Stores).filter(Stores.store==i).first())
         
         return final2
-        
+    
                 
         
         

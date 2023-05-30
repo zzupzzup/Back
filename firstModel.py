@@ -6,6 +6,7 @@ import io
 # import warnings
 # warnings.filterwarnings('ignore')
 
+import ast
 import pandas as pd
 import numpy as np
 import networkx as nx
@@ -75,11 +76,11 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
     
     input_log = user_clicked_stores # 여기는 고객이 클릭한 가게이름 리스트를 넘겨주세요
     
-    if len(user_click_log) == 0:
+    if len(input_log) == 0:
         
         first = firstRec(user_category)
-        Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=' '.join(first))
-            
+        Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=str(first))        
+        
         final1 = []
         for i in first:
             final1.append(db.query(Stores).filter(Stores.store==i).first())
@@ -89,21 +90,24 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
     
     else:  # 클릭한 식당의 카테고리와 같은 다른 식당 2개씩 더 추천(기존 추천된 항목 변하지 않고 추가만됨)
         
-        first = []
-        first_str = db.query(Users_prefer).filter(Users_prefer.id == user_id).first().firstModelResult
-        first.append(first_str.split(' '))
+        first_ = []
+        #first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).first().firstModelResult
+        first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).order_by(Users_prefer.updated_at.desc()).first().firstModelResult
+        first_ = ast.literal_eval(first_str)
         
         df_log = lr.get_df_log(input_log, stores)
 
-        remove_stores = lr.selected_remove(stores, first) 
+        remove_stores = lr.selected_remove(stores, first_) 
         log_stores = lr.plus_log(remove_stores, df_log)
-        result = log_stores + first
+        result = log_stores + first_
+        
+        Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=str(result))
         
         final2 = []
         for i in result:
             final2.append(db.query(Stores).filter(Stores.store==i).first())
         
-        return final2 
+        return final2
         
         
         

@@ -58,7 +58,7 @@ def firstRec(user_category: str):
     
     return finals
 
-@router.get('/firstModel', status_code=201) # response_model 재활용, response_model=list[PersonalModel_Item]
+@router.get('/firstModel', status_code=201, response_model=list[PersonalModel_Item]) # response_model 재활용, response_model=list[PersonalModel_Item]
 async def firstModel(user_category: str, user_id : int, db : Session = Depends(db.session)):
     user_nickname = db.query(Users).filter(Users.id == user_id).first().nickname
     user_click_log = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).all()
@@ -80,25 +80,10 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
         Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=str(first))        
         
         final1 = []
-        cnt = 0
         for i in first:
-            storeid = db.query(Stores).filter(Stores.store==i).first().id
-            store_name = db.query(Stores).filter(Stores.store == i).first().store
-            store_address = db.query(Stores).filter(Stores.store == i).first().address
-            store_category = db.query(Stores).filter(Stores.store == i).first().category
+            final1.append(db.query(Stores).filter(Stores.store == i).first())
             
-            
-            final_1 = {}
-            final_1['id'] = storeid
-            final_1['store'] = store_name
-            final_1['address'] = store_address
-            final_1['category'] = store_category 
-            cnt += 1 
-            
-            final1.append(final_1)
-
-                
-        return final1, {'count' : cnt}  # 로그 없을때 그냥 CD_recomandation 결과 출력
+        return final1  # 로그 없을때 그냥 CD_recomandation 결과 출력
     
     else:  # 클릭한 식당의 카테고리와 같은 다른 식당 2개씩 더 추천(기존 추천된 항목 변하지 않고 추가만됨)
         
@@ -124,18 +109,7 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
         
         final2 = []
         for i in result:
-            storeid = db.query(Stores).filter(Stores.store==i).first().id
-            store_name = db.query(Stores).filter(Stores.store == i).first().store
-            store_address = db.query(Stores).filter(Stores.store == i).first().address
-            store_category = db.query(Stores).filter(Stores.store == i).first().category
-            
-            final_2 = {}
-            final_2['id'] = storeid
-            final_2['store'] = store_name
-            final_2['address'] = store_address
-            final_2['category'] = store_category 
-            
-            final2.append(final_2)
+            final2.append(db.query(Stores).filter(Stores.store == i).first())
                     
         return final2
     

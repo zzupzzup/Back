@@ -5,8 +5,6 @@ import io
 
 # import warnings
 # warnings.filterwarnings('ignore')
-
-import ast
 import pandas as pd
 import numpy as np
 import networkx as nx
@@ -93,7 +91,7 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
         first_ = []
         #first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).first().firstModelResult
         first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).order_by(Users_prefer.updated_at.desc()).first().firstModelResult
-        first_ = ast.literal_eval(first_str)
+        first_ = eval(first_str)
         
         df_log = lr.get_df_log(input_log, stores)
 

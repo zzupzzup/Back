@@ -91,7 +91,6 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
         first_ = []
         #first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).first().firstModelResult
         first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).order_by(Users_prefer.updated_at.desc()).first().firstModelResult
-        first_str = first_str[1:-1]
         first_ = eval(first_str)
         
         df_log = lr.get_df_log(input_log, stores)
@@ -108,9 +107,7 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
         
         return final2
         
-        
-        return first_
-        
+                
         
         
         

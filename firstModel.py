@@ -23,7 +23,7 @@ from connectS3 import download_from_aws
 from sqlalchemy.orm import Session
 from app.database.conn import db
 from app.database.schema import Stores, Users_prefer, Users
-from models import PersonalModel_Item, PersonalModel_Detail_Item
+from models import PersonalModel_Item, FirstModel_Item
 from fastapi.responses import JSONResponse
 
 router = APIRouter()
@@ -80,13 +80,27 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
         Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=str(first))        
         
         final1 = []
+        cnt = 0
         for i in first:
-            final1.append(db.query(Stores).filter(Stores.store==i).first())
-        
-        return final1  # 로그 없을때 그냥 CD_recomandation 결과 출력
+            storeid = db.query(Stores).filter(Stores.store==i).first().id
+            store_name = db.query(Stores).filter(Stores.store == i).first().store
+            store_address = db.query(Stores).filter(Stores.store == i).first().address
+            store_category = db.query(Stores).filter(Stores.store == i).first().category
+            
+            
+            final_1 = {}
+            final_1['id'] = storeid
+            final_1['store'] = store_name
+            final_1['address'] = store_address
+            final_1['category'] = store_category 
+            cnt += 1 
+            
+            final1.append(final_1)
+
+                
+        return final1, {'count' : cnt}  # 로그 없을때 그냥 CD_recomandation 결과 출력
     
     else:  # 클릭한 식당의 카테고리와 같은 다른 식당 2개씩 더 추천(기존 추천된 항목 변하지 않고 추가만됨)
-        
         
         #first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).first().firstModelResult
         #first_str = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).order_by(Users_prefer.updated_at.desc()).first().firstModelResult
@@ -97,7 +111,7 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
             if i.firstModelResult != None: 
                 first_str_list.append(i.firstModelResult)
         
-        first_ = first_str_list[0]
+        first_ = first_str_list[-1]
         first_ = eval(first_)
         
         df_log = lr.get_df_log(input_log, stores)
@@ -110,12 +124,22 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
         
         final2 = []
         for i in result:
-            final2.append(db.query(Stores).filter(Stores.store==i).first())
-        
+            storeid = db.query(Stores).filter(Stores.store==i).first().id
+            store_name = db.query(Stores).filter(Stores.store == i).first().store
+            store_address = db.query(Stores).filter(Stores.store == i).first().address
+            store_category = db.query(Stores).filter(Stores.store == i).first().category
+            
+            final_2 = {}
+            final_2['id'] = storeid
+            final_2['store'] = store_name
+            final_2['address'] = store_address
+            final_2['category'] = store_category 
+            
+            final2.append(final_2)
+                    
         return final2
     
                 
-        
         
         
         

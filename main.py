@@ -58,6 +58,7 @@ app = create_app()
 
 origins = [
     "http://localhost:3000",
+    "https://zzupzzup.shop"
 ]
 
 app.add_middleware(

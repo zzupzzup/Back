@@ -58,7 +58,7 @@ class PersonalModel_Item(BaseModel): # 개인화 추천 모델 일반페이지
     id : int = None
     store : str = None
     address : str = None
-    category : str = None
+    category : str = None  
     
     class Config:
         orm_mode = True

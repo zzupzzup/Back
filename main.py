@@ -14,6 +14,7 @@ import click_log
 import detail_page
 import boysandgirls
 import similarRestaurant
+import user_like
 from connectS3 import upload_to_aws, download_from_aws
 from cloudpathlib import CloudPath
 from sqlalchemy.orm import Session
@@ -52,13 +53,14 @@ def create_app():
     
     app.include_router(boysandgirls.router)
     app.include_router(similarRestaurant.router)
+    
+    app.include_router(user_like.router) # 좋아요
     return app
 
 app = create_app()
 
 origins = [
     "http://localhost:3000",
-    "https://zzupzzup.shop"
 ]
 
 app.add_middleware(

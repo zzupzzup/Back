@@ -191,6 +191,12 @@ class Users_prefer(Base, BaseMixin):
     store = Column(String(length=255), nullable=True)
     firstModelResult = Column(String(length=1024), nullable=True)
     
+class Users_like(Base, BaseMixin):
+    __tablename__ = "users_like"
+    nickname = Column(String(length=255), nullable=False)
+    store = Column(String(length=255), nullable=True)
+    whetherornot = Column(Integer(), nullable=True) # 이거 맞나?
+    
 class Stores(Base, BaseMixin): # chatRRS 모델에 사용 
     __tablename__ = "stores"
     store = Column(String(length=30), nullable=False)
@@ -204,7 +210,7 @@ class Stores(Base, BaseMixin): # chatRRS 모델에 사용
     menu = Column(String(length=255), nullable=True)
     x = Column(FLOAT(), nullable=True)
     y = Column(FLOAT(), nullable=True)
-    img_url = Column(String(length=255), nullable=True)
+    img_url = Column(String(length=255), nullable=True)  
     
 class Reviews(Base, BaseMixin): # chatRRS 모델에 사용 
     __tablename__ = "reviews"

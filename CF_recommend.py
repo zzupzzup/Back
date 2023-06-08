@@ -7,9 +7,9 @@ import pandas as pd
 import numpy as np
 
 def search_simular_user(cs_table,new_user,top_n):
-    for user in new_user:
-      similar_user =cs_table[user].sort_values(ascending=False)[:top_n][1:].index.tolist()
-
+    # for user in new_user:
+    #   similar_user =cs_table[user].sort_values(ascending=False)[:top_n][1:].index.tolist()
+    similar_user =cs_table[new_user].sort_values(ascending=False)[:top_n][1:].index.tolist()
     # return similar_user[0]
     return similar_user
 
@@ -20,7 +20,7 @@ def calculate_food_type(pv_table,new_user,similar_user):
     food_type = cal_for_pv_table.columns[1:].tolist()
 
     # 새로운 유저의 음식 유형 정보
-    food_type_of_new_user = cal_for_pv_table[cal_for_pv_table['nickname'].isin(new_user)].transpose().reset_index().iloc[1:,1]
+    food_type_of_new_user = cal_for_pv_table[cal_for_pv_table['nickname']== new_user].transpose().reset_index().iloc[1:,1]
     # 기존 유저의 음식 유형 정보
     # food_type_of_db_user = cal_for_pv_table[cal_for_pv_table['nickname']=='Jinny'].transpose().reset_index().iloc[1:,1]
     

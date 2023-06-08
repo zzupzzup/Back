@@ -24,7 +24,7 @@ from sqlalchemy import create_engine, text
 from app.common.config import LocalConfig
 from sqlalchemy.orm import Session
 from app.database.conn import db
-from app.database.schema import Stores, Reviews
+from app.database.schema import Stores, Reviews, Users, Users_like
 from models import ChatRRS_Detail_Item
 import json
 from sqlalchemy.sql import text
@@ -109,7 +109,7 @@ def search(query: str):
     return search_dict
   
 @router.post('/chatRRS', status_code=200) 
-async def chatrrsModel(query : str, db : Session = Depends(db.session)): 
+async def chatrrsModel(user_id: int, query : str, db : Session = Depends(db.session)): 
   search_dict = search(query)
   results = fetch_store_info(**search_dict)
   final = results.to_dict(orient='records')
@@ -125,8 +125,18 @@ async def chatrrsModel(query : str, db : Session = Depends(db.session)):
   for store in store_list:
     store_info.append(db.query(Stores).filter(Stores.store == store).first())
     
+  user_nickname = db.query(Users).filter(Users.id == user_id).first().nickname
+    
   for i, v in enumerate(store_info):
     final[i]['id'] = v.id
+    
+    tmp = db.query(Users_like).filter(Users_like.nickname==user_nickname, Users_like.store==v.store).all()
+    if len(tmp) == 0:
+      user_like_store_whetherornot = 2 
+    else:
+      user_like_store_whetherornot = db.query(Users_like).filter(Users_like.nickname==user_nickname, Users_like.store==v.store).order_by(Users_like.updated_at.desc()).first().whetherornot
+    
+    final[i]['userscrap'] = user_like_store_whetherornot
     
   return final
 

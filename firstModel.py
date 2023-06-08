@@ -22,7 +22,7 @@ from os import path
 from connectS3 import download_from_aws
 from sqlalchemy.orm import Session
 from app.database.conn import db
-from app.database.schema import Stores, Users_prefer, Users
+from app.database.schema import Stores, Users_prefer, Users, Users_like
 from models import PersonalModel_Item, FirstModel_Item
 from fastapi.responses import JSONResponse
 
@@ -58,7 +58,7 @@ def firstRec(user_category: str):
     
     return finals
 
-@router.get('/firstModel', status_code=201, response_model=list[PersonalModel_Item]) # response_model 재활용, response_model=list[PersonalModel_Item]
+@router.get('/firstModel', status_code=201) # response_model 재활용, response_model=list[PersonalModel_Item]
 async def firstModel(user_category: str, user_id : int, db : Session = Depends(db.session)):
     user_nickname = db.query(Users).filter(Users.id == user_id).first().nickname
     user_click_log = db.query(Users_prefer).filter(Users_prefer.nickname == user_nickname).all()
@@ -77,11 +77,27 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
     if len(input_log) == 0:
         
         first = firstRec(user_category)
-        Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=str(first))        
-        
-        final1 = []
+        Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=str(first))      
+    
+        # final1 = []
+        # for i in first:
+        #     final1.append(db.query(Stores).filter(Stores.store == i).first())
+        final1 = [] 
         for i in first:
-            final1.append(db.query(Stores).filter(Stores.store == i).first())
+            final1_tmp = {}
+            final1_tmp['id'] = db.query(Stores).filter(Stores.store== i).first().id
+            final1_tmp['store'] = db.query(Stores).filter(Stores.store== i).first().store
+            final1_tmp['address'] = db.query(Stores).filter(Stores.store== i).first().address
+            final1_tmp['category'] = db.query(Stores).filter(Stores.store== i).first().category
+            
+            tmp = db.query(Users_like).filter(Users_like.nickname==user_nickname, Users_like.store==i).all()
+            if len(tmp) == 0:
+                user_like_store_whetherornot = 2 
+            else:
+                user_like_store_whetherornot = db.query(Users_like).filter(Users_like.nickname==user_nickname, Users_like.store==i).order_by(Users_like.updated_at.desc()).first().whetherornot
+            final1_tmp['userscrap'] = user_like_store_whetherornot
+            
+            final1.append(final1_tmp)
             
         return final1  # 로그 없을때 그냥 CD_recomandation 결과 출력
     
@@ -107,9 +123,26 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
         
         Users_prefer.create(db, auto_commit=True, nickname=user_nickname, firstModelResult=str(result))
         
-        final2 = []
+        # final2 = []
+        # for i in result:
+        #     final2.append(db.query(Stores).filter(Stores.store == i).first())
+            
+        final2 = [] # 와 너무 비효율적인걸?
         for i in result:
-            final2.append(db.query(Stores).filter(Stores.store == i).first())
+            final2_tmp = {}
+            final2_tmp['id'] = db.query(Stores).filter(Stores.store== i).first().id
+            final2_tmp['store'] = db.query(Stores).filter(Stores.store== i).first().store
+            final2_tmp['address'] = db.query(Stores).filter(Stores.store== i).first().address
+            final2_tmp['category'] = db.query(Stores).filter(Stores.store== i).first().category
+            
+            tmp = db.query(Users_like).filter(Users_like.nickname==user_nickname, Users_like.store==i).all()
+            if len(tmp) == 0:
+                user_like_store_whetherornot = 2 
+            else:
+                user_like_store_whetherornot = db.query(Users_like).filter(Users_like.nickname==user_nickname, Users_like.store==i).order_by(Users_like.updated_at.desc()).first().whetherornot
+            final2_tmp['userscrap'] = user_like_store_whetherornot
+            
+            final2.append(final2_tmp)
                     
         return final2
     

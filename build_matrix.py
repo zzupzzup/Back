@@ -44,11 +44,5 @@ def calculate_cosine_similarity(matrix_dummy):
 #     # for user in new_users:
 #     #     df[user].sort_values(ascending=False)[:top_k][1:].to_frame().reset_index()
 
-def search_simular_user(cs_table,new_user,top_n):
-    for user in new_user:
-      similar_user =cs_table[user].sort_values(ascending=False)[:top_n][1:].index.tolist()
-
-    return similar_user[0]  
-
 
 

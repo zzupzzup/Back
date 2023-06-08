@@ -60,7 +60,9 @@ def create_app():
 app = create_app()
 
 origins = [
-    "http://localhost:3000",
+    "*"
+   # "http://localhost:3000",
+   
 ]
 
 app.add_middleware(

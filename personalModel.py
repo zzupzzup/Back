@@ -18,7 +18,6 @@ from fastapi.encoders import jsonable_encoder
 from models import PersonalModel_Item, PersonalModel_Detail_Item
 from typing import Optional
 import ast
-
 router = APIRouter()
 
 @router.get('/personalModel',  status_code=201) # 

@@ -72,8 +72,11 @@ async def firstModel(user_category: str, user_id : int, db : Session = Depends(d
         if click.store != None:
            user_clicked_stores.append(click.store)
     
-    input_log = user_clicked_stores # 여기는 고객이 클릭한 가게이름 리스트를 넘겨주세요
-    
+    if len(user_clicked_stores) == 0:
+        input_log = user_clicked_stores # 여기는 고객이 클릭한 가게이름 리스트를 넘겨주세요
+    else:
+        input_log = list(user_clicked_stores[-1:])
+            
     if len(input_log) == 0:
         
         first = firstRec(user_category)
